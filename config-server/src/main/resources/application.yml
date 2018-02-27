@@ -5,17 +5,20 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/eddy16/eshop-config-repo
+          uri: ${CONFIG_REPO_URL:https://github.com/eddy16/eshop-config-repo}
   application:
     name: config-server
-security:
-  user:
-    name: root
-    password: s3cr3t7
 
 eureka:
   client:
     region: default
     registry-fetch-interval-seconds: 5
     service-url:
-      defaultZone: http://localhost:8082/eureka/
+      defaultZone: http://${EUREKA_HOST:localhost}:${EUREKA_PORT:8082}/eureka/
+  instance:
+    lease-expiration-duration-in-seconds: 2
+    lease-renewal-interval-in-seconds: 1
+
+ribbon:
+    eureka:
+        enabled: true

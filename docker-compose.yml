@@ -1,0 +1,32 @@
+version: '3'
+services:
+  discovery:
+    image: ecirilog/discovery-service:0.0.1-SNAPSHOT
+    ports:
+      - "8082:8082"
+    networks:
+      - eshop_nw
+  config:
+    image: ecirilog/config-server:0.0.1-SNAPSHOT
+    environment:
+      - EUREKA_HOST=discovery
+      - EUREKA_PORT=8082
+    ports:
+      - "8888:8888"
+    networks:
+      - eshop_nw
+  edge: 
+    image: ecirilog/edge-service:0.0.1-SNAPSHOT
+    environment:
+      - CONFIG_HOST=config
+      - CONFIG_PORT=8888
+      - CONFIG_BRANCH=docker
+      - CONFIG_PROFILE=develop
+    ports:
+      - "8765"
+    networks:
+      - eshop_nw
+networks:
+  eshop_nw:
+
+    

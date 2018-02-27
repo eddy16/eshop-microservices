@@ -23,7 +23,8 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 		<spring-cloud.version>Edgware.SR2</spring-cloud.version>
-	</properties>
+        <docker.image.prefix>ecirilog</docker.image.prefix>
+    </properties>
 
 	<dependencies>
 		<dependency>
@@ -63,8 +64,41 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-		</plugins>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <configuration>
+                <images>
+                    <image>
+                        <alias>${docker.image.prefix}/${project.artifactId}</alias>
+                        <name>${docker.image.prefix}/${project.artifactId}:${project.version}</name>
+                        <build>
+                            <from>openjdk:8-jdk-alpine</from>
+                            <maintainer>Edgar Cirilo Gonzalez</maintainer>
+                            <assembly>
+                                <targetDir>/</targetDir>
+                                <inline>
+                                    <files>
+                                        <file>
+                                            <source>
+                                                target/${project.build.finalName}.jar
+                                            </source>
+                                            <outputDirectory>/</outputDirectory>
+                                        </file>
+                                    </files>
+                                </inline>
+                            </assembly>
+                            <ports>
+                                <port>8082</port>
+                            </ports>
+                            <cmd>
+                                <shell>java -jar /${project.build.finalName}.jar</shell>
+                            </cmd>
+                        </build>
+                    </image>
+                </images>
+                </configuration>
+            </plugin>
+        </plugins>
 	</build>
-
-
 </project>
