@@ -15,18 +15,35 @@ services:
       - "8888:8888"
     networks:
       - eshop_nw
-  edge: 
+  edge:
     image: ecirilog/edge-service:0.0.1-SNAPSHOT
     environment:
-      - CONFIG_HOST=config
-      - CONFIG_PORT=8888
-      - CONFIG_BRANCH=docker
-      - CONFIG_PROFILE=develop
+      - EUREKA_HOST=discovery
+      - EUREKA_PORT=8082
     ports:
       - "8765"
+    depends_on:
+      - config
+    networks:
+      - eshop_nw
+  catalog:
+    image: ecirilog/catalog-service:0.0.1-SNAPSHOT
+    environment:
+      - CONFIG_BRANCH=docker
+      - CONFIG_PROFILE=develop
+      - EUREKA_HOST=discovery
+      - EUREKA_PORT=8082
+    ports:
+      - "8080"
+    depends_on:
+      - config
+    networks:
+      - eshop_nw
+  mongo-eshop:
+    image: mongo
+    ports:
+      - "27017:27017"
     networks:
       - eshop_nw
 networks:
   eshop_nw:
-
-    

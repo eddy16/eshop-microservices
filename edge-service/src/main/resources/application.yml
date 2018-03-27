@@ -1,0 +1,25 @@
+server:
+  port: 8765
+spring:
+  application:
+    name: edge-service
+  profiles:
+    active: develop
+zuul:
+  prefix: /api
+  routes:
+    config:
+      path: /config/**
+      serviceId: config-server
+    catalog:
+      path: /catalog/**
+      serviceId: catalog-service
+eureka:
+  client:
+    region: ${EUREKA_REGION:defautl}
+    registry-fetch-interval-seconds: 5
+    service-url:
+      defaultZone: http://${EUREKA_HOST:localhost}:${EUREKA_PORT:8082}/eureka/
+  instance:
+    lease-expiration-duration-in-seconds: 2
+    lease-renewal-interval-in-seconds: 1
